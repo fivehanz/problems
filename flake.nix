@@ -46,12 +46,10 @@
           rust-analyzer
           clippy
           exercism
-          fish
         ];
 
         shellHook = ''
           ${pkgs.rustToolchain}/bin/cargo --version
-          fish
         '';
       };
     });
