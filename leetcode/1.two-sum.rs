@@ -19,11 +19,11 @@
 impl Solution {
     pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
         // Create a hashmap to store the complement of each number and its index
-        let mut map = std::collections::HashMap::<i32, i32>::new(); // O(1) space complexity
+        let mut map = std::collections::HashMap::<i32, i32>::with_capacity(nums.len()); // O(n) space complexity
 
         // Iterate over the numbers and their indices
+        // O(n) time complexity
         for (index, num) in nums.iter().enumerate() {
-            // O(n) time complexity
             // Calculate the complement of the current number
             let complement = target - num; // O(1) time complexity
 

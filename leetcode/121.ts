@@ -20,20 +20,26 @@ SC: O(1)
     
 */
 
+/**
+ * Calculates the maximum profit that can be achieved by buying and selling stocks.
+ *
+ * @param {number[]} prices - An array of stock prices.
+ * @return {number} - The maximum profit that can be achieved.
+ */
 function maxProfit(prices: number[]): number {
-    let buy = 0
-    let sell = 1
-    let maxProfit = 0
-    
-    while (sell < prices.length) {
-        if (prices[buy] < prices[sell]) {
-            let profit = prices[sell] - prices[buy]
-            maxProfit = Math.max(profit, maxProfit)
-        } else {
-            buy = sell
-        }
-        sell++
+  let buy = 0; // index of the potential buying point
+  let sell = 1; // index of the potential selling point
+  let maxProfit = 0; // maximum profit achieved so far
+
+  while (sell < prices.length) {
+    if (prices[buy] < prices[sell]) {
+      let profit = prices[sell] - prices[buy]; // calculate the profit
+      maxProfit = Math.max(profit, maxProfit); // update the maxProfit if necessary
+    } else {
+      buy = sell; // update the buying point
     }
-    
-    return maxProfit
-};
+    sell++; // move to the next potential selling point
+  }
+
+  return maxProfit; // return the maximum profit achieved
+}
