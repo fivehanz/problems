@@ -47,6 +47,7 @@
           clippy
           exercism
           erlang_26
+          python311
         ];
 
         shellHook = ''
