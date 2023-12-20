@@ -18,7 +18,16 @@ class TreeNode:
 # @lc code=start
 class Solution:
     def preorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
-        return [0]
+        if root is None:
+            return []
+
+        traversal = [root.val]
+
+        return (
+            traversal
+            + self.preorderTraversal(root.left)
+            + self.preorderTraversal(root.right)
+        )
 
 
 # @lc code=end
