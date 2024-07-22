@@ -1,0 +1,295 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# introduce elixir to me
+
+## basic data types
+
+```elixir
+# integers
+x = 1
+y = 1000_000
+
+# floats
+pi = 3.14159
+
+# atoms (constants, where their name is their value)
+:ok 
+:error
+
+# strings
+greeting = "hello, world!"
+
+# bool
+true
+false
+
+# check
+IO.puts(is_integer(x))
+IO.puts(is_float(pi))
+IO.puts(is_atom(:ok))
+IO.puts(is_binary(greeting)) # strings are binary in elixir
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+true
+true
+true
+true
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## collections
+
+```elixir
+# lists
+numbers = [1, 2, 3, 4, 5]
+mixed = [1, :two, "three", 4.0]
+
+# tuples (fixed size, fast for access by index)
+person = {"alice", 30}
+
+# maps
+user = %{name: "Bob", age: 25}
+
+# access
+IO.puts(Enum.at(numbers, 2))
+IO.puts(elem(person, 0))
+IO.puts(user.name)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+3
+alice
+Bob
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## pattern matching
+
+```elixir
+# basic pattern matching
+{a, b} = {1, 2}
+IO.puts(a)
+IO.puts(b)
+
+# pattern match in list
+[head | tail] = [1, 2, 3, 4]
+IO.inspect(head)
+IO.inspect(tail)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1
+2
+1
+[2, 3, 4]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[2, 3, 4]
+```
+
+## functions
+
+```elixir
+# named function
+defmodule Math do 
+  def add(a, b) do
+    a + b
+  end
+
+  # short syntax for single expr
+  def sub(a, b), do: a - b
+end
+
+IO.puts(Math.add(5, 3))
+IO.puts(Math.sub(10, 3))
+
+# anonymous function 
+mul = fn a, b -> a * b end
+IO.puts(mul.(4, 6))
+
+# capture operator
+div = &(&1 / &2)
+IO.puts(div.(20, 4))
+
+# pattern match in fn
+greet = fn 
+  %{name: name} -> "Hello, #{name}!"
+  _ -> "Hello, stranger!"
+end
+
+IO.puts(greet.(%{name: "Hanz"}))
+IO.puts(greet.(%{}))
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+8
+7
+24
+5.0
+Hello, Hanz!
+Hello, stranger!
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## control structures
+
+```elixir
+# if else
+if true do
+  IO.puts("this is true")
+else
+  IO.puts("this is false")
+end
+
+# case statement
+case {:ok, "hello"} do
+  {:ok, result} -> IO.puts(result)
+  {:error, reason} -> IO.puts("Error: #{reason}")
+  _ -> IO.puts("undefined, default case")
+end
+
+# cond (like switch)
+cond do
+  2 + 2 == 5 -> IO.puts("this is not true")
+  1 + 1 == 2 -> IO.puts("this is true")
+  true -> IO.puts("default, true case")
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+this is true
+hello
+this is true
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## modules, pipe operator
+
+```elixir
+# define a module named 
+defmodule StringUtils do
+  # define a fn named
+  def capitalize_words(string) do
+    string
+    # |> is a pipe operator in elixir
+    # it takes the result of previous expr 
+    # and passes it as the first arg to next fn
+    |> String.split()
+    
+    # Enum.map iterates over each element in the list
+    # &String.capitalize/1 is a short hand for creating a anonymous fn
+    # that calls String.capitalize/1 on each element
+    # the /1 indicates that it takes 1 argument
+    |> Enum.map(&String.capitalize/1)
+    |> Enum.join(" ")
+  end
+end
+
+IO.puts(StringUtils.capitalize_words("hello, my darling how are you?"))
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Hello, My Darling How Are You?
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule StringUtilsTest do
+  use ExUnit.Case, async: true
+
+  describe "capitalize_words/1" do
+    test "capitalize each word in a string" do
+      assert StringUtils.capitalize_words("hello world") == "Hello World"
+    end
+
+    test "handles empty string" do
+      assert StringUtils.capitalize_words("") == ""
+    end
+
+    test "handles single word" do
+      assert StringUtils.capitalize_words("elixir") == "Elixir"
+    end
+
+    test "handles multiple spaces between words" do
+      assert StringUtils.capitalize_words("hello  world   elixir") == "Hello World Elixir"
+    end
+
+    test "handles string with leading/trailing spaces" do
+      assert StringUtils.capitalize_words("  hello world  ") == "Hello World"
+    end
+
+    test "handles string with mixed case" do
+      assert StringUtils.capitalize_words("hElLo WoRlD") == "Hello World"
+    end
+
+    test "handles string with numbers" do
+      assert StringUtils.capitalize_words("hello 123 world") == "Hello 123 World"
+    end
+
+    test "handles string with punctuation" do
+      assert StringUtils.capitalize_words("hello, world! how are you?") == "Hello, World! How Are You?"
+    end
+  end
+end
+
+ExUnit.run()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Running ExUnit with seed: 8739, max_cases: 16
+
+........................
+Finished in 0.00 seconds (0.00s async, 0.00s sync)
+24 tests, 0 failures
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{total: 24, failures: 0, excluded: 0, skipped: 0}
+```
